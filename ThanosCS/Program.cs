@@ -30,28 +30,28 @@ void TraverseDirectoryTree(string directoryPath)
         {
             TraverseDirectoryTree(fileOrDirectory);
         }
-        else if (fileOrDirectory.EndsWith(".java"))
+        else if (fileOrDirectory.EndsWith(".java") || fileOrDirectory.EndsWith(".kt"))
         {
-            var lines = File.ReadLines(fileOrDirectory).ToArray();
+            var lines = File.ReadLines(fileOrDirectory).ToList();
             SnapLines(lines, fileOrDirectory);
             File.WriteAllLines(fileOrDirectory, lines);
         }
     }
 }
 
-void SnapLines(string[] lines, string filename)
+void SnapLines(List<string> lines, string filename)
 {
     var targetAmmount = lines.Where(l => !string.IsNullOrEmpty(l) && !string.IsNullOrWhiteSpace(l)).Count() / 2;
     var snappedCount = 0;
 
     while(snappedCount < targetAmmount)
     {
-        for(var i = 0; i < lines.Length; i++)
+        for(var i = 0; i < lines.Count; i++)
         {
             var random = new Random().NextDouble();
             if(random < 0.5d)
             {
-                lines[i] = "";
+                lines.RemoveAt(i);
                 snappedCount++;
                 Console.WriteLine($"Snapped line {i} from {Path.GetFileName(filename)}");
             }
